@@ -14,9 +14,7 @@ tailwind.config = {
         "text-light": "#8A9887",
       },
       fontFamily: {
-        // Menggunakan font modern Plus Jakarta Sans untuk teks biasa & harga
         sans: ["Plus Jakarta Sans", "sans-serif"],
-        // Menggunakan font klasik Cormorant Garamond untuk judul agar terkesan lebih mewah
         serif: ["Cormorant Garamond", "serif"],
       },
     },
@@ -25,6 +23,16 @@ tailwind.config = {
 
 function matchaStore() {
   return {
+    // === STATE SLIDER BANNER ===
+    activeSlide: 0,
+    heroSlides: [
+      { img: "gambar/signaturemacthalatte.jpg", tag: "Our Signature Product", title: "Signature Casa di Matcha Latte" },
+      { img: "gambar/signaturematchafrappe.jpg", tag: "Best Seller Drink", title: "Signature Matcha Frappé Intense" },
+      { img: "gambar/strawberrywithmatchacream.jpg", tag: "Artisan Fusion Pick", title: "Strawberry with Matcha Cream" },
+    ],
+    sliderInterval: null,
+
+    // === DATA KATALOG PRODUK ===
     products: [
       // === DRINKS / MINUMAN ===
       { id: 1, name: "Signature Casa di Matcha Latte", sub: "Murni racikan rahasia matcha espresso khas Casa", price: 34000, img: "gambar/signaturemacthalatte.jpg", cat: "minuman", tag: "Favorite" },
@@ -38,7 +46,7 @@ function matchaStore() {
       { id: 9, name: "Matcha Salted Caramel Fusion", sub: "Saus karamel gurih asin dengan kocokan matcha kuat", price: 36000, img: "gambar/macthasaltedcaramel.jpg", cat: "minuman", tag: "Sale", oldPrice: 42000 },
       { id: 10, name: "Matcha Cream Layer with Boba", sub: "Matcha latte pekat dengan topping boba kenyal premium", price: 35000, img: "gambar/matchacreamwithboba.jpg", cat: "minuman", tag: null },
       { id: 11, name: "Iced Matcha Macchiato Foam", sub: "Kombinasi susu dingin dengan double-shot matcha layer", price: 34000, img: "gambar/matchamachiato.jpg", cat: "minuman", tag: null },
-      { id: 12, name: "Matcha Fruit Strawberry Latte", sub: "Buah stroberi segar tumbuk di bawah foam matcha tebal", price: 36000, img: "gambar/matchastrawberry.jpg", cat: "minuman", tag: null },
+      { id: 12, name: "Matcha Fruit Strawberry Latte", sub: "Buah stroberi segar tumbuk di bawah foam matcha tebal", price: 36000, img: "gambar/matchastrawberry.jpg", cat: null },
       { id: 13, name: "Matcha Frappé Crunchy Crumble", sub: "Frappé matcha lembut ditaburi remahan cookie renyah", price: 39000, img: "gambar/matchaflappe1.jpg", cat: "minuman", tag: null },
       { id: 14, name: "Premium Creamy Matcha Float", sub: "Minuman matcha dingin disajikan dengan es krim vanila lembut", price: 38000, img: "gambar/Matchafloat.jpg", cat: "minuman", tag: null },
 
@@ -60,10 +68,40 @@ function matchaStore() {
     toast: { show: false, message: "" },
 
     initStore() {
+      this.startSlider();
       setTimeout(() => {
         lucide.createIcons();
       }, 100);
     },
+
+    // === FUNGSI LOGIKA SLIDER ===
+    startSlider() {
+      if (this.sliderInterval) clearInterval(this.sliderInterval);
+      this.sliderInterval = setInterval(() => {
+        this.nextSlide();
+      }, 4000);
+    },
+    nextSlide() {
+      this.activeSlide = (this.activeSlide + 1) % this.heroSlides.length;
+      setTimeout(() => {
+        lucide.createIcons();
+      }, 50);
+    },
+    prevSlide() {
+      this.activeSlide = (this.activeSlide - 1 + this.heroSlides.length) % this.heroSlides.length;
+      setTimeout(() => {
+        lucide.createIcons();
+      }, 50);
+    },
+    changeSlide(index) {
+      this.activeSlide = index;
+      this.startSlider();
+      setTimeout(() => {
+        lucide.createIcons();
+      }, 50);
+    },
+
+    // === LOGIKA OPERASIONAL TOKO ===
     setCategory(cat) {
       this.activeCategory = cat;
       const titles = { all: "Semua Menu", minuman: "Minuman Segar", dessert: "Dessert & Pastry Pilihan" };

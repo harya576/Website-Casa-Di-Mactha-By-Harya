@@ -16,6 +16,9 @@
     <!-- Hubungkan ke File CSS Baru (style.css) -->
     <link rel="stylesheet" href="style.css" />
 
+    <!-- SOLUSI: Hubungkan file app.js di sini dengan atribut defer agar konfigurasi warna terbaca lebih awal -->
+    <script defer src="app.js"></script>
+
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -69,7 +72,7 @@
       </div>
     </div>
 
-    <!-- HERO SECTION -->
+    <!-- HERO SECTION (Dengan Auto-Slide Carousel Interaktif) -->
     <header class="bg-gradient-to-br from-sage-pale via-sage to-matcha-light px-6 md:px-12 py-16 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
       <div class="max-w-xl z-10">
         <span class="inline-block bg-matcha text-white text-[10px] tracking-widest uppercase px-4 py-1.5 rounded-full font-bold mb-4">✦ La Dolce Vita - Italian Cafe Vibe</span>
@@ -84,11 +87,41 @@
           </button>
         </div>
       </div>
-      <div class="relative w-full md:w-[500px] h-[380px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform hover:scale-[1.01] transition duration-500">
-        <img src="gambar/signaturemacthalatte.jpg" alt="Casa di Matcha Main Hero Banner" class="w-full h-full object-cover" />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
-          <span class="text-matcha-light font-bold text-xs uppercase tracking-wider mb-1">Our Signature Product</span>
-          <h3 class="text-white font-serif text-2xl font-bold">Signature Casa di Matcha Latte</h3>
+
+      <!-- Container Slider Frame -->
+      <div class="relative w-full md:w-[500px] h-[380px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
+        <!-- Loop Item Slides -->
+        <template x-for="(slide, index) in heroSlides" :key="index">
+          <div x-show="activeSlide === index" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 w-full h-full">
+            <img :src="slide.img" :alt="slide.title" class="w-full h-full object-cover" />
+
+            <!-- Overlay Info Produk Dinamis -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent flex flex-col justify-end p-6">
+              <span class="text-matcha-light font-bold text-xs uppercase tracking-wider mb-1" x-text="slide.tag"></span>
+              <h3 class="text-white font-serif text-2xl font-bold" x-text="slide.title"></h3>
+            </div>
+          </div>
+        </template>
+
+        <!-- Tombol Navigasi Manual Kiri & Kanan (Muncul otomatis saat di-hover) -->
+        <button
+          @click="prevSlide()"
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-text-dark shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-white hover:scale-105"
+        >
+          <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+        <button
+          @click="nextSlide()"
+          class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-text-dark shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-white hover:scale-105"
+        >
+          <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Indikator Titik Slider (Dots) -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          <template x-for="(slide, index) in heroSlides" :key="index">
+            <button @click="changeSlide(index)" :class="activeSlide === index ? 'bg-white w-6' : 'bg-white/50 w-2'" class="h-2 rounded-full transition-all duration-300"></button>
+          </template>
         </div>
       </div>
     </header>
@@ -268,7 +301,6 @@
         </div>
       </div>
     </div>
-
-    <script src="app.js"></script>
+    <!-- HAPUS BARIS LAMA DI SINI -->
   </body>
 </html>
